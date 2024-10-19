@@ -1,14 +1,14 @@
-# Use the official OpenJDK base image
-FROM openjdk:11-jre-slim AS base
+# Use Tomcat base image
+FROM tomcat:9-jdk11-openjdk-slim
 
-# Set the working directory
-WORKDIR /app
+# Remove default web apps (optional, clean up the image)
+RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Copy the WAR file into the container
-COPY target/employeeapp.war /app/employeeapp.war
+# Copy your WAR file into the Tomcat webapps directory
+COPY target/employeeapp.war /usr/local/tomcat/webapps/employeeapp.war
 
-# Expose the application port (default 8080)
+# Expose the default Tomcat port
 EXPOSE 8081
 
-# Command to run the application
-ENTRYPOINT ["java", "-jar", "employeeapp.war"]
+# CMD will run Tomcat by default
+CMD ["catalina.sh", "run"]
